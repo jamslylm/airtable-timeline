@@ -1,0 +1,210 @@
+:root {
+    --lane-height: 56px;
+    --item-padding: 8px;
+    --item-bg: #0366d6;
+    --item-text: #ffffff;
+    --ruler-bg: #f7f9fb;
+    --tick-color: #cbd5e1;
+    --app-bg: #ffffff;
+}
+
+body {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    margin: 0;
+    background: var(--app-bg);
+    color: #111827;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.controls input[type="range"] {
+    width: 200px;
+    margin-left: 8px;
+}
+
+.timeline-shell {
+    border: 1px solid #e5e7eb;
+    overflow: auto;
+    background: white;
+    padding: 12px;
+}
+
+.ruler {
+    position: relative;
+    height: 40px;
+    border-bottom: 1px solid #e6eef8;
+    margin-bottom: 8px;
+    background: var(--ruler-bg);
+}
+
+.ruler-tick {
+    position: absolute;
+    top: 0;
+    transform: translateX(-0.5px);
+    font-size: 11px;
+    text-align: center;
+    width: 1px;
+}
+
+.tick-line {
+    height: 12px;
+    border-left: 1px solid var(--tick-color);
+}
+
+.tick-label {
+    margin-top: 2px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 11px;
+    color: #475569;
+    padding: 0 4px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 4px;
+}
+
+.lanes {
+    position: relative;
+}
+
+.lane-row {
+    height: var(--lane-height);
+    min-height: var(--lane-height);
+    border-bottom: 1px dashed #eef2ff;
+    position: relative;
+}
+
+.timeline-item {
+    position: absolute;
+    top: 8px;
+    height: calc(var(--lane-height) - 16px);
+    background: linear-gradient(180deg, #0ea5e9, #0366d6);
+    color: var(--item-text);
+    border-radius: 6px;
+    padding: var(--item-padding);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(3, 102, 214, 0.12);
+    min-width: 28px; /* ensure tiny items still show text or at least a nub */
+    overflow: hidden;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.timeline-item:active {
+    cursor: grabbing;
+}
+
+.timeline-item .content {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    line-height: 1.2;
+}
+
+.timeline-item .name {
+    font-weight: 600;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* If the item becomes very narrow, hide meta first to prioritize the name */
+/* Hide meta by default to prioritize the task name on narrow items; reveal on wider items via a CSS variable hook added below */
+.timeline-item .meta { display: none; }
+
+/* When item is wide enough, show meta (we'll toggle via a helper class from CSS alone) */
+.timeline-item.show-meta .meta { display: block; }
+
+/* Show two-line stack when there is enough height, but keep tidy truncation */
+.timeline-item .meta {
+    font-size: 11px;
+    opacity: 0.95;
+    color: rgba(255,255,255,0.92);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.resize-handle {
+    width: 8px;
+    height: 100%;
+    cursor: ew-resize;
+    background: transparent;
+    flex: 0 0 8px;
+}
+
+/* increase hit target using negative margins without affecting layout */
+.resize-handle.left { margin-left: -8px; }
+.resize-handle.right { margin-right: -8px; }
+
+/* subtle visual affordance on hover */
+.timeline-item:hover .resize-handle {
+    background: rgba(255,255,255,0.12);
+}
+
+/* modal popup for selected item */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 50;
+}
+.modal-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    min-width: 280px;
+    max-width: min(90vw, 520px);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.25);
+    z-index: 51;
+}
+.modal-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-right: 28px;
+}
+.modal-body { margin-top: 8px; font-size: 14px; }
+.modal-body .row { margin: 4px 0; }
+.modal-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    color: #475569;
+}
+.modal-close:hover { color: #0f172a; }
+
+.edit-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 13px;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.12);
+}
