@@ -31,7 +31,7 @@ function App() {
             <input
               type="range"
               min="2"
-              max="20"
+              max="30"
               value={pixelsPerDay}
               onChange={(e) => setPixelsPerDay(Number(e.target.value))}
             />

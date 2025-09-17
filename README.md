@@ -49,7 +49,7 @@ The app renders the sample data from `src/timelineItems.js` and shows a multi‑
 
 - Zoom: Use the slider in the header. Labels, lane packing, and ruler tick labels (MMM d, yyyy) adapt to zoom.
 - Select: Single-click an item to open a details popup; click outside on the dark backdrop or hit the close button (×) to dismiss.
-- Edit name: Double-click an item name to edit inline. Press Enter to commit, Esc to cancel, or blur to commit.
+- Edit name: Double-click an item name to edit inline, or edit directly in the details popup (the name field is editable). Press Enter to commit, Esc to cancel, or blur to commit.
 - Move: Click and drag the body of an item to shift its date range. Movement snaps to days; small accidental movements under 4px won’t trigger a drag.
 - Resize: Drag the left/right edge handles to adjust start/end dates. The range is clamped so start is never after end (swap-safe).
 

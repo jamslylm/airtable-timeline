@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { differenceInCalendarDays, parseISO, addDays, format } from "date-fns";
 import TimelineItem from "./TimelineItem.js";
 
@@ -29,6 +29,25 @@ export default function Timeline({ lanes = [], items = [], pixelsPerDay = 6, onU
   function dateToX(dateStr) {
     const d = parseISO(dateStr);
     return differenceInCalendarDays(d, left) * pixelsPerDay;
+  }
+
+  // Inline editing state for modal
+  const [editingName, setEditingName] = useState(selectedItem ? selectedItem.name : "");
+  useEffect(() => {
+    setEditingName(selectedItem ? selectedItem.name : "");
+  }, [selectedItem]);
+
+  function commitName() {
+    if (!selectedItem) return;
+    const next = (editingName || "").trim();
+    if (next && next !== selectedItem.name) {
+      onUpdateItem && onUpdateItem({ id: selectedItem.id, name: next });
+      // keep modal open; optionally also update the selected object reference if needed
+    }
+  }
+
+  function cancelName() {
+    setEditingName(selectedItem ? selectedItem.name : "");
   }
 
   return (
@@ -62,7 +81,20 @@ export default function Timeline({ lanes = [], items = [], pixelsPerDay = 6, onU
             >
               ×
             </button>
-            <div className="modal-title">{selectedItem.name}</div>
+            <div className="modal-title">
+              <input
+                className="edit-input"
+                value={editingName}
+                onChange={(e) => setEditingName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') { e.preventDefault(); commitName(); }
+                  if (e.key === 'Escape') { e.preventDefault(); cancelName(); }
+                }}
+                onBlur={commitName}
+                autoFocus
+                aria-label="Edit name"
+              />
+            </div>
             <div className="modal-body">
               <div className="row"><strong>Start:</strong> {selectedItem.start}</div>
               <div className="row"><strong>End:</strong> {selectedItem.end}</div>
